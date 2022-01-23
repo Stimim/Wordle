@@ -35,7 +35,8 @@ def Main():
         possibilities &= ws
         break
     assert result != -1
-    if len(possibilities) == 1:
+
+    if guess_id == answer_id:
       print(f'Done')
       break
 
