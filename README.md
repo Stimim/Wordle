@@ -26,7 +26,21 @@ A program for the game [Wordle](https://www.powerlanguage.co.uk/wordle/).
   need to input the result, it's a 5-character string, each character is either:
     - `o` for letters in the word and in the correct spot.
     - `!` for letters in the word but in the wrong spot.
-    - `_` for letters not in the word.
+    - ` ` (space) for letters not in the word.
+
+    For example:
+    ```
+    guess 1:
+    raise
+    Please input the result:   !o   (this is "  !o ")
+    guess 2:
+    stowp
+    Please input the result: o      (this is "o    ")
+    guess 3:
+    sissy
+    Please input the result: ooooo  (this is "ooooo")
+    Done!
+    ```
 
 
 ### Reference:
