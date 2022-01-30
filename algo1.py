@@ -7,6 +7,14 @@ import typing
 
 import common
 
+# TOLERANCE = 0.5  # 3.735637149028078
+# TOLERANCE = 0.1  # 3.4531317494600433
+TOLERANCE = 0.08  # 3.4475161987041036
+# TOLERANCE = 0.08  # 3.451403887688985
+# TOLERANCE = 0.05  # 3.475593952483801
+# TOLERANCE = 0.01  # 3.4721382289416844
+
+print(f'TOLERANCE={TOLERANCE}')
 
 class Player(common.PlayerInterface):
   possibilities: typing.Optional[typing.Set[common.GuessIndex]]
@@ -23,7 +31,8 @@ class Player(common.PlayerInterface):
     assert self.possibilities
     N = len(self.possibilities)
     best_word = self.database.guesses[best_id]
-    best_value = best_value / math.log(2)
+    if best_id not in self.possibilities:
+      best_word += '(!)'
     print(f'return {best_word}, best_value: {best_value} remaining: {N}')
     if N < 10:
       print([self.database.guesses[k] for k in self.possibilities])
@@ -45,12 +54,9 @@ class Player(common.PlayerInterface):
           n = len(r)
           if n:
             entropy -= n * math.log(n) / N
-        if entropy > best_value:
-          best_id = guess_id
-          best_value = entropy
-        elif (abs(entropy - best_value) < 1e-3 and
-            guess_id < self.database.answer_count):
-          best_id = guess_id
+        if abs(entropy - best_value) < TOLERANCE:
+          if guess_id < self.database.answer_count:
+            best_id = guess_id
         elif entropy > best_value:
           best_id = guess_id
           best_value = entropy
@@ -73,8 +79,9 @@ class Player(common.PlayerInterface):
         n = len(self.possibilities & r)
         if n:
           entropy -= n * math.log(n) / N
-      if (abs(entropy - best_value) < 1e-3 and guess_id in self.possibilities):
-        best_id = guess_id
+      if abs(entropy - best_value) < TOLERANCE:
+        if guess_id in self.possibilities:
+          best_id = guess_id
       elif entropy > best_value:
         best_id = guess_id
         best_value = entropy
